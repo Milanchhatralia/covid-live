@@ -22,8 +22,8 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 let City;
 let State;
 client.connect(err => {
-    City = client.db("covid-live").collection("city-test");
-    State = client.db("covid-live").collection("state-test");
+    City = client.db("covid-live").collection("city-main");
+    State = client.db("covid-live").collection("state-main");
 });
 
 
@@ -69,8 +69,7 @@ app.get('/state/code/:statecode', (req, res)=>{
 })
 
 
-const regex = (str) => { return new RegExp("^" + str + "", "i") }
-
+const regex = (str) => { return new RegExp("^ ?" + str + " ?", "i") }
     
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
