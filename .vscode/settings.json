@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/56f9cbfd-6c44-43fb-8e03-31c024295dce/resourceGroups/Dreamspark/providers/Microsoft.Web/sites/covid-live",
+    "appService.deploySubpath": ""
+}
