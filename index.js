@@ -28,6 +28,11 @@ client.connect(err => {
 
 
 app.get('/city/:cityname', (req, res)=>{
+    if (!client.isConnected) {
+        client.connect(err => {
+            City = client.db("covid-live").collection("city-main");
+        });
+    }
     
     let cityname = req.params.cityname.toLowerCase();
     
@@ -55,19 +60,38 @@ app.get('/city/:cityname', (req, res)=>{
 })
 
 app.get('/state/:statename', (req, res)=>{
-    let statename = req.params.statename.toLowerCase();
+    if (!client.isConnected) {
+        client.connect(err => {
+            State = client.db("covid-live").collection("state-main");
+        });
+    }
+    let region = req.params.statename.toLowerCase();
     
-    State.find({state: regex(statename)}).toArray()
-        .then(data => res.status(200).json(data))
+    State.find({
+        $or: [
+            { state: regex(region) },
+            { county: customRegex(region, 'county') }
+        ]
+    }).toArray().then(data => res.status(200).json(data))
 })
 
 app.get('/state/code/:statecode', (req, res)=>{
-    let statecode = req.params.statecode.toLowerCase();
+    if (!client.isConnected) {
+        client.connect(err => {
+            State = client.db("covid-live").collection("state-main");
+        });
+    }
+    let regioncode = req.params.statecode.toLowerCase();
     
-    State.find({statecode: regex(statecode)}).toArray()
-        .then(data => res.status(200).json(data))
+    State.find({
+        $or: [
+            { statecode: regex(regioncode) },
+            { countycode: regex(regioncode) }
+        ]
+    }).toArray().then(data => res.status(200).json(data))
 })
 
+const customRegex = (str, addStr) => { return new RegExp("^ ?" + str + " ?"+addStr+" ?", "i") }
 
 const regex = (str) => { return new RegExp("^ ?" + str + " ?", "i") }
     
