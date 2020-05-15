@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyparser = require("body-parser");
 const cors = require('cors')
-
+const { createApp, dev, build, eject } = require('vuepress')
 const MongoClient = require('mongodb').MongoClient;
 // const db = require('./db')
 
@@ -16,6 +16,7 @@ const port = process.env.PORT || 5000;
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
+
 
 const uri = "mongodb+srv://read-covid-live:read-covid-live@urja-lvfxu.mongodb.net/test?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
