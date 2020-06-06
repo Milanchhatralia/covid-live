@@ -1,17 +1,30 @@
 const express = require("express");
+const bodyparser = require('body-parser');
+// const cors = require('cors');
+// const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
+const { customRegex, regex } = require('./regex');
 
+require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 
+// Enable CORS
+// app.use(cors());
 
 // middleware
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: false }));
 
-// app.use(bodyparser.json());
-// app.use(bodyparser.urlencoded({ extended: false }));
+// Import Routes
+// const cityRoute = require('./routes/city');
+// const stateRoute = require('./routes/state');
 
+// app.use('/city', cityRoute);
+// app.use('/state', stateRoute)
 
+// Connection
 const uri = "mongodb+srv://read-covid-live:read-covid-live@urja-lvfxu.mongodb.net/test?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 let City;
@@ -22,6 +35,8 @@ client.connect(err => {
 });
 
 
+
+// Route
 app.get('/city/:cityname', (req, res)=>{
     if (!client.isConnected) {
         console.log(client+ " is disconnected!")
@@ -41,7 +56,6 @@ app.get('/city/:cityname', (req, res)=>{
 
 app.get('/state/:statename', (req, res)=>{
     if (!client.isConnected) {
-        // console.log(client+ " is disconnected!")
         client.connect(err => {
             State = client.db("covid-live").collection("state-main");
         });
@@ -54,14 +68,12 @@ app.get('/state/:statename', (req, res)=>{
             { county: customRegex(region, 'county') }
         ]
     }).toArray().then(data => {
-        // console.log('Result: '+data)
         res.status(200).json(data)
     })
 })
 
 app.get('/state/code/:statecode', (req, res)=>{
     if (!client.isConnected) {
-        // console.log(client+ " is disconnected!")
         client.connect(err => {
             State = client.db("covid-live").collection("state-main");
         });
@@ -74,14 +86,9 @@ app.get('/state/code/:statecode', (req, res)=>{
             { countycode: regex(regioncode) }
         ]
     }).toArray().then(data => {
-        // console.log("Result: "+ data)
         res.status(200).json(data)
     })
 })
-
-const customRegex = (str, addStr) => { return new RegExp("^ ?" + str + " ?"+addStr+" ?", "i") }
-
-const regex = (str) => { return new RegExp("^ ?" + str + " ?", "i") }
     
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
