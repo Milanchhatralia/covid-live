@@ -39,8 +39,8 @@ client.connect(err => {
 // Route
 
 app.get('/ping', (req, res)=>{
-    console.log("##### Wakeup call from geroku at: "+Date.now());
-    res.status(200);
+    console.log("##### Wakeup call from geroku at: "+new Date().toString());
+    res.send().status(200);
 })
 
 app.get('/city/:cityname', (req, res)=>{
