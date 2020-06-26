@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyparser = require('body-parser');
-// const cors = require('cors');
+const cors = require('cors');
 // const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
 const { customRegex, regex } = require('./regex');
@@ -11,7 +11,7 @@ const app = express();
 const port = process.env.PORT;
 
 // Enable CORS
-// app.use(cors());
+app.use(cors());
 
 // middleware
 app.use(bodyparser.json());
@@ -37,7 +37,6 @@ client.connect(err => {
 
 
 // Route
-
 app.get('/ping', (req, res)=>{
 
     console.log("##### Wakeup call from geroku at: "+new Date().toString());
