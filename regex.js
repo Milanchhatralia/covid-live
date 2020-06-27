@@ -1,5 +1,7 @@
-const customRegex = (str, addStr) => { return new RegExp("^ ?" + str + " ?"+addStr+" ?", "i") }
+const strInRegex = (str, addStr) => { return new RegExp("^ ?" + str + " ?"+addStr+" ?", "i") }
 
-const regex = (str) => { return new RegExp("^ ?" + str + " ?", "i") }
+const idleStrRegex = (str) => { return new RegExp("^ ?" + str + " ?", "i") }
 
-module.exports = { customRegex, regex }
+const wordBrRegex = (str) => { return new RegExp("^ ?" + str + "\\b", "i") }
+
+module.exports = { strInRegex, idleStrRegex, wordBrRegex }

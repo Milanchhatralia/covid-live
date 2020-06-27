@@ -3,7 +3,7 @@ const bodyparser = require('body-parser');
 const cors = require('cors');
 // const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
-const { customRegex, regex } = require('./regex');
+const { strInRegex, idleStrRegex, wordBrRegex } = require('./regex');
 
 require('dotenv').config();
 
@@ -55,8 +55,7 @@ app.get('/city/:cityname', (req, res)=>{
     }
     
     let cityname = req.params.cityname.toLowerCase();
-    
-    City.find({city: regex(cityname)}).toArray()
+    City.find({city: wordBrRegex(cityname)}).toArray()
         .then(citydata => {
             // console.log('Result: '+data)
             res.status(200).json(citydata);
@@ -73,8 +72,8 @@ app.get('/state/:statename', (req, res)=>{
     
     State.find({
         $or: [
-            { state: regex(region) },
-            { county: customRegex(region, 'county') }
+            { state: idleStrRegex(region) },
+            { county: strInRegex(region, 'county') }
         ]
     }).toArray().then(data => {
         res.status(200).json(data)
@@ -91,8 +90,8 @@ app.get('/state/code/:statecode', (req, res)=>{
     
     State.find({
         $or: [
-            { statecode: regex(regioncode) },
-            { countycode: regex(regioncode) }
+            { statecode: idleStrRegex(regioncode) },
+            { countycode: idleStrRegex(regioncode) }
         ]
     }).toArray().then(data => {
         res.status(200).json(data)
