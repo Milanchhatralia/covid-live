@@ -90,7 +90,7 @@ app.get('/state/code/:statecode', (req, res)=>{
     
     State.find({
         $or: [
-            { statecode: idleStrRegex(regioncode) },
+            { statecode: wordBrRegex(regioncode) },
             { countycode: idleStrRegex(regioncode) }
         ]
     }).toArray().then(data => {
