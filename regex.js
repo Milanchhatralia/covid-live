@@ -4,4 +4,6 @@ const idleStrRegex = (str) => { return new RegExp("^ ?" + str + " ?", "i") }
 
 const wordBrRegex = (str) => { return new RegExp("^ ?" + str + "\\b", "i") }
 
-module.exports = { strInRegex, idleStrRegex, wordBrRegex }
+const letterSearch = (str) => new RegExp("("+str+")", "i");
+
+module.exports = { strInRegex, idleStrRegex, wordBrRegex, letterSearch }

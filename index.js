@@ -3,7 +3,7 @@ const bodyparser = require('body-parser');
 const cors = require('cors');
 // const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
-const { strInRegex, idleStrRegex, wordBrRegex } = require('./regex');
+const { strInRegex, idleStrRegex, wordBrRegex, letterSearch } = require('./regex');
 
 require('dotenv').config();
 
@@ -39,7 +39,7 @@ client.connect(err => {
 // Route
 app.get('/ping', (req, res)=>{
 
-    console.log("##### Wakeup call from geroku at: "+new Date().toString());
+    console.log("##### Wakeup call from heroku at: "+new Date().toString());
     res.status(200).json({
         status: 200,
         time: new Date().toString(),
@@ -96,6 +96,27 @@ app.get('/state/code/:statecode', (req, res)=>{
     }).toArray().then(data => {
         res.status(200).json(data)
     })
+})
+
+// Search for region (city, state, country)
+app.get('/search/:regionStr', (req, res) =>{
+    if (!client.isConnected) {
+        client.connect(err => {
+            State = client.db("covid-live").collection("state-main");
+            City = client.db("covid-live").collection("city-main");
+        });
+    }
+    let regionStr = req.params.regionStr.toLowerCase();
+
+    State.find({
+        state: letterSearch(regionStr),
+    }).toArray().then(stateData => {
+        City.find({
+            city: letterSearch(regionStr)
+        }).toArray().then(cityData => {
+            res.status(200).json([...cityData, ...stateData]);
+        });
+    });
 })
     
 app.listen(port, () => {
