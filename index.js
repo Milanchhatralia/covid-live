@@ -114,6 +114,8 @@ app.get('/search/:regionStr', (req, res) =>{
         City.find({
             city: letterSearch(regionStr)
         }).toArray().then(cityData => {
+            cityData = cityData.slice(0, 4);
+            stateData = stateData.slice(0, 4);
             res.status(200).json([...cityData, ...stateData]);
         });
     });
